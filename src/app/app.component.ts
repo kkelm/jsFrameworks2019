@@ -23,4 +23,10 @@ export class AppComponent {
         this.quizzes = this.quizService.loadQuizzes();
         console.log(this.quizzes);
     }
+
+    selectedQuiz = undefined;
+    selectQuiz(quiz) {
+        this.selectedQuiz = quiz;
+        console.log(this.selectedQuiz.name);
+    }
 }
