@@ -351,10 +351,15 @@
 
   <!-- Resources -->
   <h2
+    style="padding: 2em"
     [style.color]="'#f00'"
     [style.background-color]="propName"
     [style.border-radius]="borderRadius"
     [style.box-shadow]="dropShadow"
+
+    [attr.title]="toolTipText"
+
+    [innerHTML]="innerText"
   >
   Resources</h2>
   <p>Here are some links to help you get started:</p>

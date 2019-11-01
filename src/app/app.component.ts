@@ -10,5 +10,9 @@ export class AppComponent {
   //propName = 'purple';
   propName = Math.random() > 0.5 ? 'green' : 'yellow';
   borderRadius = '15px';
-  dropShadow = '5px 5px 10px blue';
+  dropShadow = '5px 5px 10px #555';
+
+  toolTipText = `The color is ${this.propName}`;
+
+  innerText = 'Property Binding';
 }
