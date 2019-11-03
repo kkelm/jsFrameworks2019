@@ -18,15 +18,24 @@ export class AppComponent {
     innerText = 'Property Binding';
 
     quizzes = [];
+    quizName = '';
 
     constructor(private quizService: QuizService) {
         this.quizzes = this.quizService.loadQuizzes();
-        console.log(this.quizzes);
+        //console.log(this.quizzes);
     }
 
     selectedQuiz = undefined;
     selectQuiz(quiz) {
         this.selectedQuiz = quiz;
-        console.log(this.selectedQuiz.name);
+
+        this.quizName = this.selectedQuiz.name;
+        //console.log(this.selectedQuiz.name);
     }
+
+    addQuiz() {
+        this.quizzes = [...this.quizzes, { name: 'Untitled Quiz', questionCount: 0}];
+        console.log(this.quizzes);
+    }
+
 }
