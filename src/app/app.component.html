@@ -1,6 +1,10 @@
 <div class="container pt-3">
 
-    <div class="row p-1">
+    <div class="row" *ngIf="failedToLoad">
+        <h3>Failed to Load Quizzes</h3>
+    </div>
+
+    <div class="row p-1" *ngIf="!failedToLoad">
         <div class="col-md-4">
             <button (click)="addQuiz()" class="btn btn-outline-success mb-3">
                 Add Quiz
