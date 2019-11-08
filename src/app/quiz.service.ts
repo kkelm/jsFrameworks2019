@@ -9,9 +9,9 @@ export class QuizService {
 
   loadQuizzes() {
       return [
-        { name: 'Quiz 1', questionCount: 10}
-        , { name: 'Quiz 2', questionCount: 5}
-        , { name: 'Quiz 3', questionCount: 7}
+        { name: 'Quiz 1', questionCount: 10, questions: []}
+        , { name: 'Quiz 2', questionCount: 0, questions: []}
+        , { name: 'Quiz 3', questionCount: 7, questions: []}
       ];
   }
 
