@@ -65,8 +65,9 @@
                 </div>
                 <div class="card-body" *ngIf="selectedQuiz.questions.length > 0; else noQuestions">
                     <div class="card-text my-3 d-flex justify-content-between" *ngFor="let question of selectedQuiz.questions">
-                        <input type="text" [value]="question" class="form-control" />
+                        <input type="text" [value]="question.name" class="form-control" />
                         <button 
+                            (click)="deleteQuestion(selectedQuiz, question)" 
                             style="height: 100%; width: auto; font-size: xx-large; background: none; border: none;" 
                             class="fa fa-trash text-danger m-1">
                         </button>

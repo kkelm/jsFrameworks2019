@@ -74,8 +74,71 @@ export class AppComponent implements OnInit {
     }
 
     addQuestion(selectedQuiz, newQuestion) {
+/*
+        console.log(selectedQuiz);
+
+        //console.log(
+        selectedQuiz = this.quizzes
+        .filter(quiz => selectedQuiz === quiz)
+        .map(() => { 
+            selectedQuiz.questions.push({name : newQuestion.value});
+            selectedQuiz.questionCount = selectedQuiz.questions.length;
+            //[quiz.questions].push({name: 'test'});
+            //[questions].push({name: 'test'});
+            //console.log(quiz);
+            return selectedQuiz;
+        });
 
         this.quizzes = this.quizzes
+        .reduce((updatedQuizzes, quiz) => {
+            if (quiz === selectedQuiz) {
+
+                console.log(selectedQuiz);
+                quiz = selectedQuiz;
+            }
+            updatedQuizzes.push(quiz);
+
+            return updatedQuizzes;
+        }, []);
+
+        console.log(this.quizzes);
+
+        this.selectQuiz(selectedQuiz);
+*/
+        /**
+         * Adds the new question to selected question by pushing the value of the 
+         * new question to the selected question's questions property. Then updates 
+         * the question count property, and returns an updated quizzes array.
+        */ 
+       
+        this.quizzes = 
+        this.quizzes
+        .reduce((updatedQuizzes, quiz) => {
+
+            if (quiz === selectedQuiz) {
+                selectedQuiz.questions.push({name: newQuestion.value});
+                selectedQuiz.questionCount = selectedQuiz.questions.length;
+                quiz = selectedQuiz;
+            }
+            updatedQuizzes.push(quiz);
+
+            return updatedQuizzes;
+        }, []);
+
+        this.selectQuiz(selectedQuiz);
+        // Clears the add question textbox.
+        newQuestion.value = '';
+    }
+
+    deleteQuestion(selectedQuiz, question) {
+        /*
+        this.quizzes.filter(quiz => {
+            if (quiz.questions) {}
+        });
+
+
+        this.quizzes = 
+        this.quizzes
         .reduce((quizzes, quiz) => {
 
             if (quiz === selectedQuiz) {
@@ -87,10 +150,7 @@ export class AppComponent implements OnInit {
 
             return quizzes;
         }, []);
-
-        this.selectQuiz(selectedQuiz);
-        //console.log(this.quizzes);
-        newQuestion.value = '';
+        */
     }
 
 }
