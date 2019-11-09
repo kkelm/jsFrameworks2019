@@ -10,7 +10,7 @@ interface QuizDisplay {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styles: ['./app.component.css']
 })
 
 export class AppComponent implements OnInit {
@@ -25,36 +25,34 @@ export class AppComponent implements OnInit {
     innerText = 'Property Binding';
 
     quizzes: QuizDisplay[] = [];
-
     quizName = '';
+    questions = [];
 
     failedToLoad = false;
+
+
 
     constructor(private quizService: QuizService) {}
 
     ngOnInit() {
-        
+        /*
         this.quizService
         .loadQuizzes()
-        .subscribe(data => {
-            //this.quizzes.map(data => ({name: data.name, questionCount: data.questionCount, questions: data.questions}));
+        .subscribe(
+            data => {
+                //this.quizzes.map(data => ({name: data.name, questionCount: data.questionCount, questions: data.questions}));
+                //this.quizzes = Object.values(data).map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
+                this.quizzes = (<any[]> data).map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
+                console.log(data);
 
-            //const i = 0;
-
-            //this.quizzes = Object.values(data).map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
-            
-            
-            this.quizzes = (<any[]> data).map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
-
-            console.log(data);
-
-        },
-        error => {
-            console.error(error.error);
-            this.failedToLoad = true;
-        }
+            },
+            error => {
+                console.error(error.error);
+                this.failedToLoad = true;
+            }
         );
-        //this.quizzes = this.quizService.loadQuizzes().map(q => ({name: q.name, questionCount: q.questionCount, questions: q.questions}));
+        */
+        this.quizzes = this.quizService.loadQuizzes().map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
         //this.quizzes =  this.quizzes.map(quiz => [...this.quizzes, {questionCount: quiz}]);
 
         console.log(this.quizzes);
@@ -63,8 +61,9 @@ export class AppComponent implements OnInit {
     selectedQuiz = undefined;
     selectQuiz(quiz) {
         this.selectedQuiz = quiz;
-
         this.quizName = this.selectedQuiz.name;
+        this.questions = this.selectedQuiz.questions;
+
         //console.log(this.selectedQuiz.name);
     }
 
