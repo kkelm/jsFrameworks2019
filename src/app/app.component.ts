@@ -56,20 +56,14 @@ export class AppComponent implements OnInit {
         this.quizzes = this.quizService.loadQuizzes().map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
         //this.quizzes =  this.quizzes.map(quiz => [...this.quizzes, {questionCount: quiz}]);
 
-        console.log(this.quizzes);
+        //console.log(this.quizzes);
     }
 
     selectedQuiz = undefined;
-    quizQuestions = undefined;
-    questions = undefined;
 
     selectQuiz(quiz) {
         this.selectedQuiz = quiz;
         this.quizName = this.selectedQuiz.name;
-        this.questions = this.selectedQuiz.questions;
-        //this.selectQuestions(this.selectedQuiz);
-
-        //console.log(this.selectedQuiz.name);
     }
 
     addQuiz() {
@@ -79,59 +73,24 @@ export class AppComponent implements OnInit {
         //console.log(this.quizzes);
     }
 
-    
-
-    selectQuestions(quiz) {
-        //this.quizQuestions = quiz.questions;
-    }
-
-    addQuestion(newQuestion) {
-
-        console.log(newQuestion.value);
-
-        //console.log(this.quizQuestions);
-
-/*
-        this.quizzes
-        .filter(selectedQuiz => selectedQuiz === this.selectedQuiz)
-        .map(quiz => [...(<any[]>quiz.questions), newQuestion.value]);
-
-        console.log(this.quizzes);
-*/
-        
-        this.questions = [...this.questions, newQuestion.value];
-        console.log(this.questions);
-
-        this.quizzes
-        .filter(selectedQuiz => selectedQuiz === this.selectedQuiz)
-        .map(quiz => ({name: quiz.name, questionCount: this.questions.length, questions: this.questions}))
-        .map(updatedQuiz => {
-            this.quizzes.push(updatedQuiz);
-        })
-        ;
+    addQuestion(selectedQuiz, newQuestion) {
 
         this.quizzes = this.quizzes
-        .reduce((acc, q) => {
+        .reduce((quizzes, quiz) => {
 
-            if (q !== this.selectedQuiz) {
-                console.log(q);
-                console.log(this.selectedQuiz);
-                acc.push(q);
-                
+            if (quiz === selectedQuiz) {
+                selectedQuiz.questions.push(newQuestion.value);
+                selectedQuiz.questionCount = selectedQuiz.questions.length;
+                quiz = selectedQuiz;
             }
+            quizzes.push(quiz);
 
-            return acc;
+            return quizzes;
         }, []);
 
-        console.log(this.quizzes);
-/*
-        let newQuestions = quiz.map(quizQ => quizQ.questions = this.questions);
-
-        newQuestions.map(questions => [...this.selectedQuiz, questions]);
-*/
+        this.selectQuiz(selectedQuiz);
+        //console.log(this.quizzes);
         newQuestion.value = '';
-        //this.selectQuiz(newQuiz);
-        //console.log(quizzes);
     }
 
 }
