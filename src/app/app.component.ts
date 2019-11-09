@@ -26,7 +26,8 @@ export class AppComponent implements OnInit {
 
     quizzes: QuizDisplay[] = [];
     quizName = '';
-    questions = [];
+
+    //questions = [];
 
     failedToLoad = false;
 
@@ -59,10 +60,14 @@ export class AppComponent implements OnInit {
     }
 
     selectedQuiz = undefined;
+    quizQuestions = undefined;
+    questions = undefined;
+
     selectQuiz(quiz) {
         this.selectedQuiz = quiz;
         this.quizName = this.selectedQuiz.name;
         this.questions = this.selectedQuiz.questions;
+        //this.selectQuestions(this.selectedQuiz);
 
         //console.log(this.selectedQuiz.name);
     }
@@ -71,7 +76,62 @@ export class AppComponent implements OnInit {
         const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: []};
         this.quizzes = [...this.quizzes, newQuiz];
         this.selectQuiz(newQuiz);
+        //console.log(this.quizzes);
+    }
+
+    
+
+    selectQuestions(quiz) {
+        //this.quizQuestions = quiz.questions;
+    }
+
+    addQuestion(newQuestion) {
+
+        console.log(newQuestion.value);
+
+        //console.log(this.quizQuestions);
+
+/*
+        this.quizzes
+        .filter(selectedQuiz => selectedQuiz === this.selectedQuiz)
+        .map(quiz => [...(<any[]>quiz.questions), newQuestion.value]);
+
         console.log(this.quizzes);
+*/
+        
+        this.questions = [...this.questions, newQuestion.value];
+        console.log(this.questions);
+
+        this.quizzes
+        .filter(selectedQuiz => selectedQuiz === this.selectedQuiz)
+        .map(quiz => ({name: quiz.name, questionCount: this.questions.length, questions: this.questions}))
+        .map(updatedQuiz => {
+            this.quizzes.push(updatedQuiz);
+        })
+        ;
+
+        this.quizzes = this.quizzes
+        .reduce((acc, q) => {
+
+            if (q !== this.selectedQuiz) {
+                console.log(q);
+                console.log(this.selectedQuiz);
+                acc.push(q);
+                
+            }
+
+            return acc;
+        }, []);
+
+        console.log(this.quizzes);
+/*
+        let newQuestions = quiz.map(quizQ => quizQ.questions = this.questions);
+
+        newQuestions.map(questions => [...this.selectedQuiz, questions]);
+*/
+        newQuestion.value = '';
+        //this.selectQuiz(newQuiz);
+        //console.log(quizzes);
     }
 
 }
