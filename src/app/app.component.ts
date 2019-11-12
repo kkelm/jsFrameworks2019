@@ -75,35 +75,34 @@ export class AppComponent implements OnInit {
 
     addQuestion(selectedQuiz, newQuestion) {
 /*
-        console.log(selectedQuiz);
-
-        //console.log(
-        selectedQuiz = this.quizzes
+       selectedQuiz = 
+       this.quizzes
         .filter(quiz => selectedQuiz === quiz)
-        .map(() => { 
-            selectedQuiz.questions.push({name : newQuestion.value});
-            selectedQuiz.questionCount = selectedQuiz.questions.length;
-            //[quiz.questions].push({name: 'test'});
-            //[questions].push({name: 'test'});
-            //console.log(quiz);
-            return selectedQuiz;
-        });
+        .map(quiz => (
+                {
+                    name: quiz.name, 
+                    questionCount: quiz.questionCount,
+                    questions: [...selectedQuiz.questions, {name: newQuestion.value}]
+                }
+            )
+        );
 
-        this.quizzes = this.quizzes
-        .reduce((updatedQuizzes, quiz) => {
-            if (quiz === selectedQuiz) {
+       this.quizzes =
+        this.quizzes
+        .reduce((updatedQuizzes, quizzes) => {
 
-                console.log(selectedQuiz);
-                quiz = selectedQuiz;
+            if (quizzes.name === selectedQuiz[0].name) {
+                selectedQuiz[0].questionCount = selectedQuiz[0].questions.length;
+                quizzes = selectedQuiz[0];
             }
-            updatedQuizzes.push(quiz);
+
+            updatedQuizzes.push(quizzes);
 
             return updatedQuizzes;
-        }, []);
+        }
+        , []);
 
-        console.log(this.quizzes);
-
-        this.selectQuiz(selectedQuiz);
+        this.selectQuiz(selectedQuiz[0]);
 */
         /**
          * Adds the new question to selected question by pushing the value of the 
@@ -124,17 +123,15 @@ export class AppComponent implements OnInit {
 
             return updatedQuizzes;
         }, []);
-
         this.selectQuiz(selectedQuiz);
+        
+
+       
         // Clears the add question textbox.
-        newQuestion.value = '';
+       newQuestion.value = '';
     }
 
     deleteQuestion(selectedQuiz, question) {
-        /*
-        this.quizzes.filter(quiz => {
-            if (quiz.questions) {}
-        });
 
 
         this.quizzes = 
@@ -142,15 +139,17 @@ export class AppComponent implements OnInit {
         .reduce((quizzes, quiz) => {
 
             if (quiz === selectedQuiz) {
-                selectedQuiz.questions.push(newQuestion.value);
-                selectedQuiz.questionCount = selectedQuiz.questions.length;
-                quiz = selectedQuiz;
+                console.log(selectedQuiz.questions[0].name);
+                //selectedQuiz.questionCount = selectedQuiz.questions.length;
+                //quiz = selectedQuiz;
             }
             quizzes.push(quiz);
 
             return quizzes;
         }, []);
-        */
+
+        //this.selectQuiz(selectedQuiz);
+        
     }
 
 }
