@@ -70,7 +70,6 @@ export class AppComponent implements OnInit {
         const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: []};
         this.quizzes = [...this.quizzes, newQuiz];
         this.selectQuiz(newQuiz);
-        //console.log(this.quizzes);
     }
 
     addQuestion(selectedQuiz, newQuestion) {
@@ -125,30 +124,24 @@ export class AppComponent implements OnInit {
         }, []);
         this.selectQuiz(selectedQuiz);
         
-
-       
         // Clears the add question textbox.
        newQuestion.value = '';
     }
 
-    deleteQuestion(selectedQuiz, question) {
+    deleteQuestion(selectedQuiz, questionIndex) {
+        
+        selectedQuiz.questions.filter((questions, index) => {
 
-
-        this.quizzes = 
-        this.quizzes
-        .reduce((quizzes, quiz) => {
-
-            if (quiz === selectedQuiz) {
-                console.log(selectedQuiz.questions[0].name);
-                //selectedQuiz.questionCount = selectedQuiz.questions.length;
-                //quiz = selectedQuiz;
+            if(index === questionIndex) {
+                
+                selectedQuiz.questions.splice(questionIndex, 1);
+                
+                selectedQuiz.questionCount = selectedQuiz.questions.length;
             }
-            quizzes.push(quiz);
 
-            return quizzes;
-        }, []);
+        });
 
-        //this.selectQuiz(selectedQuiz);
+        this.selectQuiz(selectedQuiz);
         
     }
 
