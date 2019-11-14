@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
         this.selectQuiz(newQuiz);
     }
 
-    addQuestion(selectedQuiz, newQuestion) {
+    addQuestion(newQuestion) {
 /*
        selectedQuiz = 
        this.quizzes
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
          * new question to the selected question's questions property. Then updates 
          * the question count property, and returns an updated quizzes array.
         */ 
-       
+       /*
         this.quizzes = 
         this.quizzes
         .reduce((updatedQuizzes, quiz) => {
@@ -122,26 +122,25 @@ export class AppComponent implements OnInit {
 
             return updatedQuizzes;
         }, []);
-        this.selectQuiz(selectedQuiz);
-        
+        */
+        this.selectedQuiz.questions = [...this.selectedQuiz.questions, {name: newQuestion.value}];
+        this.selectedQuiz.questionCount = this.selectedQuiz.questions.length;
+        this.selectQuiz(this.selectedQuiz);
         // Clears the add question textbox.
-       newQuestion.value = '';
+        newQuestion.value = '';
     }
 
-    deleteQuestion(selectedQuiz, questionIndex) {
+    deleteQuestion(questionIndex) {
         
-        selectedQuiz.questions.filter((questions, index) => {
-
-            if(index === questionIndex) {
-                
-                selectedQuiz.questions.splice(questionIndex, 1);
-                
-                selectedQuiz.questionCount = selectedQuiz.questions.length;
+        this.selectedQuiz.questions = this.selectedQuiz.questions.filter((question, index) => {
+            if (index !== questionIndex) {
+                console.log(question);
+                return question;
             }
-
         });
+        this.selectedQuiz.questionCount = this.selectedQuiz.questions.length;
 
-        this.selectQuiz(selectedQuiz);
+        this.selectQuiz(this.selectedQuiz);
         
     }
 
