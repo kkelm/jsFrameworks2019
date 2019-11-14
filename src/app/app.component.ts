@@ -130,14 +130,19 @@ export class AppComponent implements OnInit {
         newQuestion.value = '';
     }
 
-    deleteQuestion(questionIndex) {
-        
+    deleteQuestion(event) {
+
+        const id: number = parseInt(event.currentTarget.getAttribute('data-id'));
+
+        this.selectedQuiz.questions = this.selectedQuiz.questions.filter((question, index) => index !== id ? question : '');
+        /*
         this.selectedQuiz.questions = this.selectedQuiz.questions.filter((question, index) => {
-            if (index !== questionIndex) {
-                console.log(question);
+            console.log(typeof(index) +'--'+ typeof(id));
+            if (index !== id) {
                 return question;
             }
         });
+        */
         this.selectedQuiz.questionCount = this.selectedQuiz.questions.length;
 
         this.selectQuiz(this.selectedQuiz);
