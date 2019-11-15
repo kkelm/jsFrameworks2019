@@ -145,4 +145,13 @@ export class AppComponent implements OnInit {
         
     }
 
+    jsPromiseOne() {
+        const x = this.quizService.getMagicNumberPromise(true);
+        console.log(x);
+
+        x.then(n => console.log(n))
+        .catch(error => console.log(error))
+        .finally(() => { console.log('Finally'); } );
+    }
+
 }

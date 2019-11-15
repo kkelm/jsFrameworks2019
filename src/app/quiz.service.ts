@@ -21,4 +21,9 @@ export class QuizService {
         ];
     }
 
+    getMagicNumberPromise(makeThisPromiseSucceed: boolean): Promise<number> {
+        const p = new Promise<number>((resolve, reject) => makeThisPromiseSucceed ? resolve(42) : reject('Failed getMagicNumberPromise'));
+        return p;
+    }
+
 }

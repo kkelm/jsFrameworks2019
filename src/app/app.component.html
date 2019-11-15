@@ -9,6 +9,12 @@
             <button (click)="addQuiz()" class="btn btn-outline-success mb-3">
                 Add Quiz
             </button>
+            <button 
+                class="btn btn-link"
+                (click)="jsPromiseOne()"
+            >
+                JS Promises 1
+            </button>
             <div class="list-group">
                 <button 
                     *ngFor="let quiz of quizzes" 
