@@ -27,16 +27,15 @@ export class AppComponent implements OnInit {
     quizzes: QuizDisplay[] = [];
     quizName = '';
 
-    //questions = [];
-
     failedToLoad = false;
 
-
+    selectedQuiz = undefined;
 
     constructor(private quizService: QuizService) {}
 
     ngOnInit() {
-        /*
+        /* 
+        //Web Service
         this.quizService
         .loadQuizzes()
         .subscribe(
@@ -53,13 +52,10 @@ export class AppComponent implements OnInit {
             }
         );
         */
+        // Local Array
         this.quizzes = this.quizService.loadQuizzes().map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
-        //this.quizzes =  this.quizzes.map(quiz => [...this.quizzes, {questionCount: quiz}]);
-
-        //console.log(this.quizzes);
+        // console.log(this.quizzes);
     }
-
-    selectedQuiz = undefined;
 
     selectQuiz(quiz) {
         this.selectedQuiz = quiz;
@@ -132,7 +128,7 @@ export class AppComponent implements OnInit {
 
     deleteQuestion(event) {
 
-        const id: number = parseInt(event.currentTarget.getAttribute('data-id'));
+        const id: number = Number(event.currentTarget.getAttribute('data-id'));
 
         this.selectedQuiz.questions = this.selectedQuiz.questions.filter((question, index) => index !== id ? question : '');
         /*
