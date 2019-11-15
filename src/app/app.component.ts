@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { QuizService } from './quiz.service';
+
+import { transition, animate, style, trigger, state, keyframes } from '@angular/animations';
+import { delay } from 'q';
 
 interface QuizDisplay {
     name: string;
@@ -9,12 +12,40 @@ interface QuizDisplay {
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styles: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styles: ['./app.component.css'],
+    /*
+    animations: [
+        trigger(
+            'showMessage', 
+            [
+                state('open', style({backgroundColor: 'grey', opacity: 1})),
+                state('closed', style({opacity: 0})),
+
+                transition('open => closed', [animate('1s')]),
+                transition('closed => open', [animate('2s')])
+            ]
+        )
+    ]
+    */
+
+
+
+    animations: [
+        trigger('showMessage', [
+            state('open', style({ opacity: 1 }))
+            , state('closed', style({ opacity: 0 }))
+            , transition('open => closed', [ animate('3s') ])
+            //transition('closed => open', [ animate('1s') ]),
+        ]),
+      ]
 })
 
 export class AppComponent implements OnInit {
+
+    isOpen = true;
+
     title = 'quiz-editor';
     //propName = 'purple';
     propName = Math.random() > 0.5 ? 'green' : 'yellow';
@@ -31,6 +62,8 @@ export class AppComponent implements OnInit {
     failedToLoad = false;
 
     selectedQuiz = undefined;
+
+    successMessage = null;
 
     constructor(private quizService: QuizService) {}
 
@@ -71,6 +104,8 @@ export class AppComponent implements OnInit {
     }
 
     addQuestion(newQuestion) {
+
+        this.isOpen = !this.isOpen;
 /*
        selectedQuiz = 
        this.quizzes
@@ -126,6 +161,14 @@ export class AppComponent implements OnInit {
         this.selectQuiz(this.selectedQuiz);
         // Clears the add question textbox.
         newQuestion.value = '';
+
+        this.successMessage = 'Question Added';
+
+        setTimeout(() => {
+            this.successMessage = null;
+        }, 3000);
+
+        
     }
 
     deleteQuestion(event) {
