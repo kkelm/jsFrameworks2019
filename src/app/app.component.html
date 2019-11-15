@@ -21,12 +21,20 @@
             >
                 JS Promises 2
             </button>
+            <button 
+                class="btn btn-link"
+                (click)="jsPromiseThree()"
+            >
+                JS Promises 3
+            </button>
             <div class="list-group">
                 <button 
                     *ngFor="let quiz of quizzes" 
                     (click)="selectQuiz(quiz)" 
                     [class.active]="quiz == selectedQuiz"
-                    class="list-group-item d-flex justify-content-between align-items-center">
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                    [style.text-decoration]="quiz.markedForDelete ? 'line-through' : 'inherit'"
+                >
                     {{quiz.name}}
                     <small 
                         class="badge" 
@@ -96,7 +104,23 @@
 
             <div class="card mb-3">
                 <div class="card-header">Other</div>
-                <div class="card-body">Coming Soon</div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input 
+                            type="checkbox" 
+                            class="form-check-input" 
+                            id="deleteMark"  
+                            [(ngModel)]="selectedQuiz.markedForDelete"
+                        />
+                        <label 
+                            for="deleteMark"
+                            class="form-check-label"
+                            [class.text-danger]="selectedQuiz.markedForDelete"
+                        >
+                            Marked For Delete
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

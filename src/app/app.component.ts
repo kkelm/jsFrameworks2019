@@ -5,6 +5,7 @@ interface QuizDisplay {
     name: string;
     questionCount: number;
     questions: object;
+    markedForDelete: boolean;
 }
 
 @Component({
@@ -53,7 +54,8 @@ export class AppComponent implements OnInit {
         );
         */
         // Local Array
-        this.quizzes = this.quizService.loadQuizzes().map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
+        this.quizzes = this.quizService.loadQuizzes()
+        .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
         // console.log(this.quizzes);
     }
 
@@ -63,7 +65,7 @@ export class AppComponent implements OnInit {
     }
 
     addQuiz() {
-        const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: []};
+        const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: [], markedForDelete: false};
         this.quizzes = [...this.quizzes, newQuiz];
         this.selectQuiz(newQuiz);
     }
@@ -162,6 +164,26 @@ export class AppComponent implements OnInit {
 
             const b = await this.quizService.getMagicNumberPromise(true);
             console.log(b);
+        }
+        catch(err) {
+            console.log(err);
+        }
+        
+
+    }
+
+    async jsPromiseThree() {
+
+        try {
+            const a = this.quizService.getMagicNumberPromise(true);
+            console.log(a);
+
+            const b = this.quizService.getMagicNumberPromise(true);
+            console.log(b);
+
+            // const results = await Promise.all([a, b]);
+            const results = await Promise.race([a, b]);
+            console.log(results);
         }
         catch(err) {
             console.log(err);

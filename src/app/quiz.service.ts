@@ -15,9 +15,9 @@ export class QuizService {
         
         // Local Array
         return [
-            { name: 'Quiz 1', questionCount: 0, questions: [{name : 'question 1'}, {name : 'question 2'}, {name : 'question 3'}]}
-            , { name: 'Quiz 2', questionCount: 0, questions: []}
-            , { name: 'Quiz 3', questionCount: 0, questions: [{name : 'question 4'}]}
+            { name: 'Quiz 1', questionCount: 0, questions: [{name : 'question 1'}, {name : 'question 2'}, {name : 'question 3'}], markedForDelete: false}
+            , { name: 'Quiz 2', questionCount: 0, questions: [], markedForDelete: false}
+            , { name: 'Quiz 3', questionCount: 0, questions: [{name : 'question 4'}], markedForDelete: false}
         ];
     }
 
