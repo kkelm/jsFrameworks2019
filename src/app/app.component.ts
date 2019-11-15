@@ -154,4 +154,20 @@ export class AppComponent implements OnInit {
         .finally(() => { console.log('Finally'); } );
     }
 
+    async jsPromiseTwo() {
+
+        try {
+            const a = await this.quizService.getMagicNumberPromise(false);
+            console.log(a);
+
+            const b = await this.quizService.getMagicNumberPromise(true);
+            console.log(b);
+        }
+        catch(err) {
+            console.log(err);
+        }
+        
+
+    }
+
 }
