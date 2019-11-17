@@ -115,6 +115,36 @@
             </div>
 
             <div class="card mb-3">
+                <div class="card-header">Question Stats</div>
+                <div class="card-body">
+
+                    <p><ngb-progressbar type="success" [value]="loadingProgress" [striped]="true" [animated]="true"><i>{{ loadingProgress }}%</i></ngb-progressbar></p>
+                    <!--
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" sortable="name" (sort)="onSort($event)">Country</th>
+                                <th scope="col" sortable="area" (sort)="onSort($event)">Area</th>
+                                <th scope="col" sortable="population" (sort)="onSort($event)">Population</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <div class="card-text my-3 d-flex justify-content-between" *ngFor="let question of selectedQuiz.questions; let questionId = index">
+                        <input type="text" [value]="question.name" class="form-control" />
+                        <button 
+                            (click)="deleteQuestion($event)" 
+                            [attr.data-id]="questionId"
+                            style="height: 100%; width: auto; font-size: xx-large; background: none; border: none;" 
+                            class="fa fa-trash text-danger m-1">
+                        </button>
+                    </div> 
+                    -->
+                </div>
+            </div>
+
+            <div class="card mb-3">
                 <div class="card-header">Other</div>
                 <div class="card-body">
                     <div class="form-check">

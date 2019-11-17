@@ -3,6 +3,7 @@ import { QuizService } from './quiz.service';
 
 import { transition, animate, style, trigger, state, keyframes } from '@angular/animations';
 import { delay } from 'q';
+import { promise } from 'protractor';
 
 interface QuizDisplay {
     name: string;
@@ -43,6 +44,8 @@ interface QuizDisplay {
 })
 
 export class AppComponent implements OnInit {
+
+    loadingProgress = 100;
 
     isOpen = true;
 
@@ -87,8 +90,21 @@ export class AppComponent implements OnInit {
         );
         */
         // Local Array
-        this.quizzes = this.quizService.loadQuizzes()
-        .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
+
+        const loadQuizzesPromise = new Promise((resolve, reject) => {
+
+            this.quizzes = this.quizService.loadQuizzes()
+            .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
+
+            if(this.quizzes.length > 0) {
+                resolve(this.quizzes);
+            } else {
+                reject('Failed loadQuizzes');
+            }
+        });
+
+        loadQuizzesPromise.then(p => console.log(p));
+
         // console.log(this.quizzes);
     }
 
