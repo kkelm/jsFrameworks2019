@@ -1,9 +1,11 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { QuizService } from './quiz.service';
 
 import { transition, animate, style, trigger, state, keyframes } from '@angular/animations';
 import { delay } from 'q';
 import { promise } from 'protractor';
+import { exists } from 'fs';
+import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 
 interface QuizDisplay {
     name: string;
@@ -45,9 +47,14 @@ interface QuizDisplay {
 
 export class AppComponent implements OnInit {
 
-    loadingProgress = 100;
-
+    loadingProgress = 0;
     isOpen = true;
+
+    @ViewChild('progressBar', {read: NgbProgressbar, static: true}) progressBar: NgbProgressbar;
+
+    
+
+
 
     title = 'quiz-editor';
     //propName = 'purple';
@@ -70,7 +77,8 @@ export class AppComponent implements OnInit {
 
     constructor(private quizService: QuizService) {}
 
-    ngOnInit() {
+    async ngOnInit() {
+        console.log(this.progressBar);
         /* 
         //Web Service
         this.quizService
@@ -90,20 +98,67 @@ export class AppComponent implements OnInit {
         );
         */
         // Local Array
+        const quizData = this.quizService.loadQuizzes(null);
 
-        const loadQuizzesPromise = new Promise((resolve, reject) => {
+        console.log(quizData);
 
-            this.quizzes = this.quizService.loadQuizzes()
-            .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
-
-            if(this.quizzes.length > 0) {
-                resolve(this.quizzes);
-            } else {
-                reject('Failed loadQuizzes');
+        quizData.then(
+            data => {
+                
+                return data
+                .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
+                
             }
-        });
+        )
+        .then(quizzes => {
 
-        loadQuizzesPromise.then(p => console.log(p));
+            const increment = (quizzes.length / 4) * 10;
+            this.loadingProgress = increment;
+
+            const timer = setInterval(() => {
+                
+                
+                if(this.loadingProgress < 100) {
+
+                    console.log(this.loadingProgress);
+
+                    this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+
+                    this.quizzes = quizzes;
+
+                    this.loadingProgress += increment;
+
+                    return true;
+                }
+                else {
+                    this.loadingProgress = 100;
+                    this.progressBar.type = 'success';
+                    clearInterval(timer);
+                }
+
+            }, 1000);
+
+/*
+            setTimeout(() => {
+                console.log(quizzes);
+                this.loadingProgress = 100;
+                
+            }, 3000);
+*/
+            
+            
+            }
+        )
+        .then(intervals => {
+            console.log(intervals);
+        })
+        .catch(error => console.error(error));
+
+       // this.quizzes
+       // .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
+
+        //const quizzes = this.quizService.loadQuizzes();
+        //loadQuizzesPromise.then(p => console.log(p));
 
         // console.log(this.quizzes);
     }

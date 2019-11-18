@@ -1,3 +1,7 @@
+<div class="container">
+        <p><ngb-progressbar #progressBar type="danger" [value]="loadingProgress" [striped]="true" [animated]="true"><i>{{ loadingProgress }}%</i></ngb-progressbar></p>
+</div>
+
 <div class="container pt-3">
 
     <div class="row" *ngIf="failedToLoad">
@@ -5,6 +9,7 @@
     </div>
 
     <div class="row p-1" *ngIf="!failedToLoad">
+        
         <div class="col-md-4 mb-3">
             <button (click)="addQuiz()" class="btn btn-outline-success mb-3">
                 Add Quiz
