@@ -100,18 +100,17 @@ export class AppComponent implements OnInit {
         // Local Array
         const quizData = this.quizService.loadQuizzes(null);
 
-        console.log(quizData);
+        this.loadingProgress = 0;
 
-        quizData.then(
+        const quizzes = await quizData.then(
             data => {
-                
                 return data
                 .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
-                
             }
         )
         .then(quizzes => {
-
+                return quizzes;
+/*
             const increment = (quizzes.length / 4) * 10;
             this.loadingProgress = increment;
 
@@ -137,30 +136,39 @@ export class AppComponent implements OnInit {
                 }
 
             }, 1000);
-
-/*
-            setTimeout(() => {
-                console.log(quizzes);
-                this.loadingProgress = 100;
-                
-            }, 3000);
 */
             
             
-            }
-        )
+        })
         .then(intervals => {
-            console.log(intervals);
+            return intervals;
         })
         .catch(error => console.error(error));
 
-       // this.quizzes
-       // .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
+        this.loadingProgress = 33;
 
-        //const quizzes = this.quizService.loadQuizzes();
-        //loadQuizzesPromise.then(p => console.log(p));
+        const increment = (quizzes.length / 4) * 10;
+        this.loadingProgress = increment;
 
-        // console.log(this.quizzes);
+        const timer = setInterval(() => {
+
+            this.loadingProgress = (this.loadingProgress + increment) > 100 ? 100 : this.loadingProgress + increment;
+
+            if(this.loadingProgress < 100) {
+
+                this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+                
+            }
+            else {
+                this.loadingProgress = 100;
+                this.progressBar.type = 'success';
+                this.progressBar.height = '0';
+                clearInterval(timer);
+                this.quizzes = quizzes;
+            }            
+
+        }, 2000);
+
     }
 
     selectQuiz(quiz) {
