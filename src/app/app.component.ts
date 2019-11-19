@@ -6,6 +6,7 @@ import { delay } from 'q';
 import { promise } from 'protractor';
 import { exists } from 'fs';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
+import { observable } from 'rxjs';
 
 interface QuizDisplay {
     name: string;
@@ -21,7 +22,7 @@ interface QuizDisplay {
     /*
     animations: [
         trigger(
-            'showMessage', 
+            'showMessage',
             [
                 state('open', style({backgroundColor: 'grey', opacity: 1})),
                 state('closed', style({opacity: 0})),
@@ -40,7 +41,7 @@ interface QuizDisplay {
             state('open', style({ opacity: 1 }))
             , state('closed', style({ opacity: 0 }))
             , transition('open => closed', [ animate('3s') ])
-            //transition('closed => open', [ animate('1s') ]),
+            // transition('closed => open', [ animate('1s') ]),
         ]),
       ]
 })
@@ -52,12 +53,12 @@ export class AppComponent implements OnInit {
 
     @ViewChild('progressBar', {read: NgbProgressbar, static: true}) progressBar: NgbProgressbar;
 
-    
+
 
 
 
     title = 'quiz-editor';
-    //propName = 'purple';
+    // propName = 'purple';
     propName = Math.random() > 0.5 ? 'green' : 'yellow';
     borderRadius = '15px';
     dropShadow = '5px 5px 10px #555';
@@ -78,97 +79,102 @@ export class AppComponent implements OnInit {
     constructor(private quizService: QuizService) {}
 
     async ngOnInit() {
-        console.log(this.progressBar);
-        /* 
-        //Web Service
-        this.quizService
-        .loadQuizzes()
-        .subscribe(
-            data => {
-                //this.quizzes.map(data => ({name: data.name, questionCount: data.questionCount, questions: data.questions}));
-                //this.quizzes = Object.values(data).map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
-                this.quizzes = (<any[]> data).map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions}));
-                console.log(data);
+        // console.log(this.progressBar);
+        // Web Service
+/*
+        await this.quizService.loadQuizzesFromApi()
+        .then(observAble => {
+             return observAble.subscribe(
+                data => {
+                    this.loadingProgress = 33;
+                    this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+                    this.quizzes = data.map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}))
+                }
+                , e => {
+                    console.error(e.error);
+                }
+            );
+        })
+        .then(quizzesMap => {
+            this.loadingProgress = 66;
+            this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+        })
+        .catch(error => console.error(error))
+        .finally(() => {
+            this.loadingProgress = 100;
+            this.progressBar.type = 'success';
+            this.progressBar.height = '0';
+        });
+*/
 
-            },
-            error => {
-                console.error(error.error);
-                this.failedToLoad = true;
-            }
-        );
-        */
+            await this.quizService.loadQuizzesFromApi()
+            .then(observAble => {
+                return observAble.subscribe(
+                    data => {
+                        // this.loadingProgress = 33;
+                        // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+                        // this.quizzes = data.map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}))
+                    }
+                    , e => {
+                        console.error(e.error);
+                    }
+                );
+            })
+            .then(quizzesMap => {
+                // this.loadingProgress = 66;
+                // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+            })
+            .catch(error => console.error(error))
+            .finally(() => {
+                // this.loadingProgress = 100;
+                // this.progressBar.type = 'success';
+                // this.progressBar.height = '0';
+            });
+
+
         // Local Array
-        const quizData = this.quizService.loadQuizzes(null);
+        await this.quizService.loadQuizzes()
+        .then( data => {
+                // this.loadingProgress = 33;
+                // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+                const quizzes = data.map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
 
-        this.loadingProgress = 0;
 
-        const quizzes = await quizData.then(
-            data => {
-                return data
-                .map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
+                this.loadingProgress = 33;
+
+                const increment = (quizzes.length / 4) * 10;
+                this.loadingProgress = increment;
+
+                const timer = setInterval(() => {
+
+                    this.loadingProgress = (this.loadingProgress + increment) > 100 ? 100 : this.loadingProgress + increment;
+
+                    if (this.loadingProgress < 100) {
+
+                        this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+
+                    } else {
+                        this.loadingProgress = 100;
+                        this.progressBar.type = 'success';
+                        // this.progressBar.height = '0';
+                        clearInterval(timer);
+                        this.quizzes = quizzes;
+                    }
+
+                }, 2000);
             }
         )
-        .then(quizzes => {
-                return quizzes;
-/*
-            const increment = (quizzes.length / 4) * 10;
-            this.loadingProgress = increment;
-
-            const timer = setInterval(() => {
-                
-                
-                if(this.loadingProgress < 100) {
-
-                    console.log(this.loadingProgress);
-
-                    this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-
-                    this.quizzes = quizzes;
-
-                    this.loadingProgress += increment;
-
-                    return true;
-                }
-                else {
-                    this.loadingProgress = 100;
-                    this.progressBar.type = 'success';
-                    clearInterval(timer);
-                }
-
-            }, 1000);
-*/
-            
-            
+        .then(quizzesMap => {
+            // this.loadingProgress = 66;
+            // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
         })
-        .then(intervals => {
-            return intervals;
-        })
-        .catch(error => console.error(error));
-
-        this.loadingProgress = 33;
-
-        const increment = (quizzes.length / 4) * 10;
-        this.loadingProgress = increment;
-
-        const timer = setInterval(() => {
-
-            this.loadingProgress = (this.loadingProgress + increment) > 100 ? 100 : this.loadingProgress + increment;
-
-            if(this.loadingProgress < 100) {
-
-                this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-                
-            }
-            else {
-                this.loadingProgress = 100;
-                this.progressBar.type = 'success';
-                this.progressBar.height = '0';
-                clearInterval(timer);
-                this.quizzes = quizzes;
-            }            
-
-        }, 2000);
-
+        .catch(error => console.error(error))
+        .finally(() => {
+            // this.loadingProgress = 100;
+            // this.progressBar.type = 'success';
+            // this.progressBar.height = '0';
+        });
+        
     }
 
     selectQuiz(quiz) {
@@ -186,12 +192,12 @@ export class AppComponent implements OnInit {
 
         this.isOpen = !this.isOpen;
 /*
-       selectedQuiz = 
+       selectedQuiz =
        this.quizzes
         .filter(quiz => selectedQuiz === quiz)
         .map(quiz => (
                 {
-                    name: quiz.name, 
+                    name: quiz.name,
                     questionCount: quiz.questionCount,
                     questions: [...selectedQuiz.questions, {name: newQuestion.value}]
                 }
@@ -216,12 +222,12 @@ export class AppComponent implements OnInit {
         this.selectQuiz(selectedQuiz[0]);
 */
         /**
-         * Adds the new question to selected question by pushing the value of the 
-         * new question to the selected question's questions property. Then updates 
+         * Adds the new question to selected question by pushing the value of the
+         * new question to the selected question's questions property. Then updates
          * the question count property, and returns an updated quizzes array.
-        */ 
+        */
        /*
-        this.quizzes = 
+        this.quizzes =
         this.quizzes
         .reduce((updatedQuizzes, quiz) => {
 
@@ -247,7 +253,7 @@ export class AppComponent implements OnInit {
             this.successMessage = null;
         }, 3000);
 
-        
+
     }
 
     deleteQuestion(event) {
@@ -266,7 +272,7 @@ export class AppComponent implements OnInit {
         this.selectedQuiz.questionCount = this.selectedQuiz.questions.length;
 
         this.selectQuiz(this.selectedQuiz);
-        
+
     }
 
     jsPromiseOne() {
@@ -286,11 +292,10 @@ export class AppComponent implements OnInit {
 
             const b = await this.quizService.getMagicNumberPromise(true);
             console.log(b);
-        }
-        catch(err) {
+        } catch (err) {
             console.log(err);
         }
-        
+
 
     }
 
@@ -306,11 +311,10 @@ export class AppComponent implements OnInit {
             // const results = await Promise.all([a, b]);
             const results = await Promise.race([a, b]);
             console.log(results);
-        }
-        catch(err) {
+        } catch (err) {
             console.log(err);
         }
-        
+
 
     }
 

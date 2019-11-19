@@ -8,14 +8,46 @@ import { HttpClient } from '@angular/common/http';
 export class QuizService {
 
     constructor(private httpClient: HttpClient) { }
-/*
-    loadQuizzes() {
-        // Web Service
-        // return this.httpClient.get('https://modern-js.azurewebsites.net/api/HttpTriggerJS1?code=8XD3vN3ehHLdZacBQJQhgUnNst9202gdd5VM3kWCytDkz2nXhia6kA==&name=Mystery%20Quiz');
-    }
-*/
 
-    loadQuizzes(tokken): Promise<any> {
+    loadQuizzesFromApi(): Promise <any> {
+        
+        return new Promise((resolve, reject) => {
+            try {
+                setTimeout(() => {
+                    resolve(this.httpClient.get('https://modern-js.azurewebsites.net/api/HttpTriggerJS1?code=8XD3vN3ehHLdZacBQJQhgUnNst9202gdd5VM3kWCytDkz2nXhia6kA==&name=Mystery%20Quiz'));
+                }, 3000);
+            } catch (error) {
+                reject('New Error' + error);
+            }
+        });
+        
+    }
+
+    loadQuizzes(): Promise <any> {
+        return new Promise((resolve, reject) => {
+            try {
+                setTimeout(() => {
+                    resolve(
+                        [
+                            { 
+                                name: 'Quiz 1', 
+                                questionCount: 0, 
+                                questions: [{name : 'question 1'}, {name : 'question 2'}, {name : 'question 3'}], 
+                                markedForDelete: false
+                            }
+                            , { name: 'Quiz 2', questionCount: 0, questions: [], markedForDelete: false}
+                            , { name: 'Quiz 3', questionCount: 0, questions: [{name : 'question 4'}], markedForDelete: false}
+                        ]
+                    );
+                }, 3000);
+            } catch (error) {
+                reject('New Error' + error);
+            }
+        });
+    }
+
+
+    loadQuizzesOLD(tokken): Promise<any> {
 
         let quizzes: any = [];
 
