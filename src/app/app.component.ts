@@ -13,6 +13,7 @@ interface QuizDisplay {
     questionCount: number;
     questions: object;
     markedForDelete: boolean;
+    newlyAddedQuiz: boolean;
 }
 
 @Component({
@@ -140,7 +141,7 @@ export class AppComponent implements OnInit {
             .then(data => {
                 // this.loadingProgress = 33;
                 // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-                const quizzes = data.map(q => ({ name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete }));
+                const quizzes = data.map(q => ({ name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete, newlyAddedQuiz: false }));
                 const increment = (quizzes.length / 4) * 10;
                 this.loadingProgress = increment;
                 //this.progressBar.height = '30px';
@@ -174,6 +175,15 @@ export class AppComponent implements OnInit {
         this.selectedQuiz = undefined;
     }
 
+    get numberOfAddedQuizzes() {
+        return this.getAddeddQuizzes().length;
+    }
+
+    getAddeddQuizzes() {
+        console.log(this.quizzes.length);
+        return this.quizzes.filter( q => q.newlyAddedQuiz);
+    }
+
     get numberOfDeletedQuizzes() {
         return this.getDeletedQuizzes().length;
     }
@@ -188,7 +198,7 @@ export class AppComponent implements OnInit {
     }
 
     addQuiz() {
-        const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: [], markedForDelete: false};
+        const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: [], markedForDelete: false, newlyAddedQuiz: true};
         this.quizzes = [...this.quizzes, newQuiz];
         this.selectQuiz(newQuiz);
     }
