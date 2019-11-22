@@ -53,6 +53,8 @@ export class AppComponent implements OnInit {
 
     @ViewChild('progressBar', {read: NgbProgressbar, static: true}) progressBar: NgbProgressbar;
 
+    displayForm = false;
+
 
 
 
@@ -78,7 +80,7 @@ export class AppComponent implements OnInit {
 
     constructor(private quizService: QuizService) {}
 
-    async ngOnInit() {
+    ngOnInit() {
         // console.log(this.progressBar);
         // Web Service
 /*
@@ -107,18 +109,22 @@ export class AppComponent implements OnInit {
         });
 */
 
-            await this.quizService.loadQuizzesFromApi()
+        // this.loadQuizzesFromApi();
+        // Local Array
+        this.loadQuizzes();
+        
+    }
+
+    private loadQuizzesFromApi() {
+        this.quizService.loadQuizzesFromApi()
             .then(observAble => {
-                return observAble.subscribe(
-                    data => {
-                        // this.loadingProgress = 33;
-                        // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-                        // this.quizzes = data.map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}))
-                    }
-                    , e => {
-                        console.error(e.error);
-                    }
-                );
+                return observAble.subscribe(data => {
+                    // this.loadingProgress = 33;
+                    // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+                    // this.quizzes = data.map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}))
+                }, e => {
+                    console.error(e.error);
+                });
             })
             .then(quizzesMap => {
                 // this.loadingProgress = 66;
@@ -126,55 +132,54 @@ export class AppComponent implements OnInit {
             })
             .catch(error => console.error(error))
             .finally(() => {
-                // this.loadingProgress = 100;
-                // this.progressBar.type = 'success';
-                // this.progressBar.height = '0';
             });
+    }
 
-
-        // Local Array
-        await this.quizService.loadQuizzes()
-        .then( data => {
+    private loadQuizzes() {
+        this.quizService.loadQuizzes()
+            .then(data => {
                 // this.loadingProgress = 33;
                 // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-                const quizzes = data.map(q => ({name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete}));
-
-
-                this.loadingProgress = 33;
-
+                const quizzes = data.map(q => ({ name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete }));
                 const increment = (quizzes.length / 4) * 10;
                 this.loadingProgress = increment;
-
+                //this.progressBar.height = '30px';
                 const timer = setInterval(() => {
-
                     this.loadingProgress = (this.loadingProgress + increment) > 100 ? 100 : this.loadingProgress + increment;
-
                     if (this.loadingProgress < 100) {
-
-                        this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-
-                    } else {
+                        //this.progressBar.type = (this.loadingProgress < 50) ? 'danger' : 'warning';
+                    }
+                    else {
                         this.loadingProgress = 100;
-                        this.progressBar.type = 'success';
-                        // this.progressBar.height = '0';
+                        //this.progressBar.type = 'success';
+                        //this.progressBar.height = '0';
+                        this.displayForm = true;
                         clearInterval(timer);
                         this.quizzes = quizzes;
                     }
+                }, 500);
+            })
+            .then(quizzesMap => {
+                // this.loadingProgress = 66;
+                // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
+            })
+            .catch(error => console.error(error))
+            .finally(() => {
+            });
+    }
 
-                }, 2000);
-            }
-        )
-        .then(quizzesMap => {
-            // this.loadingProgress = 66;
-            // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-        })
-        .catch(error => console.error(error))
-        .finally(() => {
-            // this.loadingProgress = 100;
-            // this.progressBar.type = 'success';
-            // this.progressBar.height = '0';
-        });
-        
+    cancelBatchEdits() {
+        this.loadQuizzes();
+        // this.loadQuizzesFromApi();
+        this.selectedQuiz = undefined;
+    }
+
+    get numberOfDeletedQuizzes() {
+        return this.getDeletedQuizzes().length;
+    }
+
+    getDeletedQuizzes() {
+        return this.quizzes.filter( q => q.markedForDelete);
     }
 
     selectQuiz(quiz) {

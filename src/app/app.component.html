@@ -1,8 +1,8 @@
-<div class="container">
-        <p><ngb-progressbar #progressBar type="danger" height="30px" [value]="loadingProgress" [striped]="true" [animated]="true"><i>{{ loadingProgress }}%</i></ngb-progressbar></p>
+<div *ngIf="!displayForm" class="row h-100 align-items-center justify-content-center">
+    <ngb-progressbar #progressBar class="col" type="success" height="30px" [value]="loadingProgress" [striped]="true" [animated]="true"><i>{{ loadingProgress }}%</i></ngb-progressbar>
 </div>
 
-<div class="container pt-3">
+<div *ngIf="displayForm" class="pt-3">
 
     <div class="row" *ngIf="failedToLoad">
         <h3>Failed to Load Quizzes</h3>
@@ -65,11 +65,16 @@
         </div>
 
         <div class="col-md-8" *ngIf="selectedQuiz != undefined">
-            <button class="btn btn-outline-dark mb-3">
+            <button class="btn btn-outline-dark mb-3"
+                
+            >
                 Save Quizzes
+                <span *ngIf="numberOfDeletedQuizzes > 0" class="badge badge-danger ml-1">-{{ numberOfDeletedQuizzes }}</span>
             </button>
 
-            <button class="btn btn-link mb-3">
+            <button class="btn btn-link mb-3"
+                (click)="cancelBatchEdits()"
+            >
                 Cancel
             </button>
 

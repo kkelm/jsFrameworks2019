@@ -13,9 +13,9 @@ export class QuizService {
         
         return new Promise((resolve, reject) => {
             try {
-                setTimeout(() => {
+                //setTimeout(() => {
                     resolve(this.httpClient.get('https://modern-js.azurewebsites.net/api/HttpTriggerJS1?code=8XD3vN3ehHLdZacBQJQhgUnNst9202gdd5VM3kWCytDkz2nXhia6kA==&name=Mystery%20Quiz'));
-                }, 3000);
+                //}, 500);
             } catch (error) {
                 reject('New Error' + error);
             }
@@ -39,7 +39,7 @@ export class QuizService {
                             , { name: 'Quiz 3', questionCount: 0, questions: [{name : 'question 4'}], markedForDelete: false}
                         ]
                     );
-                }, 3000);
+                }, 1000);
             } catch (error) {
                 reject('New Error' + error);
             }
