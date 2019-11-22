@@ -14,6 +14,7 @@ interface QuizDisplay {
     questions: object;
     markedForDelete: boolean;
     newlyAddedQuiz: boolean;
+    naiveQuizCheckSum: string;
 }
 
 @Component({
@@ -141,7 +142,14 @@ export class AppComponent implements OnInit {
             .then(data => {
                 // this.loadingProgress = 33;
                 // this.progressBar.type = (this.loadingProgress < 50 ) ? 'danger' : 'warning';
-                const quizzes = data.map(q => ({ name: q.name, questionCount: q.questions.length, questions: q.questions, markedForDelete: q.markedForDelete, newlyAddedQuiz: false }));
+                const quizzes = data.map(q => ({ 
+                    name: q.name
+                    , questionCount: q.questions.length
+                    , questions: q.questions
+                    , markedForDelete: q.markedForDelete
+                    , newlyAddedQuiz: false 
+                    , naiveQuizCheckSum: this.generateNaiveQuizCheckSum(q)
+                }));
                 const increment = (quizzes.length / 4) * 10;
                 this.loadingProgress = increment;
                 //this.progressBar.height = '30px';
@@ -156,6 +164,9 @@ export class AppComponent implements OnInit {
                         //this.progressBar.height = '0';
                         this.displayForm = true;
                         clearInterval(timer);
+
+
+                        console.log(quizzes);
                         this.quizzes = quizzes;
                     }
                 }, 500);
@@ -169,6 +180,21 @@ export class AppComponent implements OnInit {
             });
     }
 
+    generateNaiveQuizCheckSum(quiz) {
+        return quiz.name + quiz.questions.map(q => '~' + q.name).join('');
+    }
+
+    get numberOfEditedQuizzes() {
+        return this.getEditedQuiz().length;
+    }
+
+    getEditedQuiz() {
+        return this.quizzes.filter( 
+            q => this.generateNaiveQuizCheckSum(q) != q.naiveQuizCheckSum 
+            && !q.newlyAddedQuiz && !q.markedForDelete
+        );
+    }
+
     cancelBatchEdits() {
         this.loadQuizzes();
         // this.loadQuizzesFromApi();
@@ -180,7 +206,6 @@ export class AppComponent implements OnInit {
     }
 
     getAddeddQuizzes() {
-        console.log(this.quizzes.length);
         return this.quizzes.filter( q => q.newlyAddedQuiz);
     }
 
@@ -198,7 +223,14 @@ export class AppComponent implements OnInit {
     }
 
     addQuiz() {
-        const newQuiz = { name: 'Untitled Quiz', questionCount: 0, questions: [], markedForDelete: false, newlyAddedQuiz: true};
+        const newQuiz = { 
+            name: 'Untitled Quiz'
+            , questionCount: 0
+            , questions: []
+            , markedForDelete: false
+            , newlyAddedQuiz: true
+            , naiveQuizCheckSum: ''
+        };
         this.quizzes = [...this.quizzes, newQuiz];
         this.selectQuiz(newQuiz);
     }
