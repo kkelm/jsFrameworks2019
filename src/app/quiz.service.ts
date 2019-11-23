@@ -55,7 +55,12 @@ export class QuizService {
         });
     
         //console.log(h);
-    
+
+        console.log(JSON.stringify({
+            "changedQuizzes": changedQuizzes
+            , "newQuizzes": newQuizzes
+        }));
+        
         return this.httpClient.post(
             'https://modern-js.azurewebsites.net/save-quizzes-proxy'
             , JSON.stringify({
@@ -66,6 +71,7 @@ export class QuizService {
         , {
             headers: h
         });
+        
     }
 
 

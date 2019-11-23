@@ -320,35 +320,33 @@ export class AppComponent implements OnInit {
 
     }
 
+    questionValues(questions) {
+        const q = questions[0].map(question => question)
+        .map(qz => qz.name);
+        console.log(q);
+        return q;
+    }
+
     saveBatchEdits() {
 
-        const newQuizzes = {
-            quizName: '',
-            quizQuestions: []
-        };
-
-        const newQuestions = {};
+        let newQuizzes: object[] = [
+            {quizName: ''},
+            {quizQuestions: []}
+        ];
 
         console.log(this.quizzes);
 
-        let questionArray = [];
-        //console.log(this.getEditedQuizzes());
-
-        
-        
-
-        this.quizzes
+        newQuizzes = this.quizzes
         .filter(quiz => quiz.newlyAddedQuiz)
-        .map(newQuizz => {
-            newQuizzes.quizName = newQuizz.name;
-            newQuizzes.quizQuestions = newQuizz.questions[0].name;
-        })
-        //.reduce((acc, quiz) => acc = quiz, null)
+        .map(newQuizzes => ({
+            quizName: newQuizzes.name
+            //, quizQuestions: [newQuizzes.questions].map(this.questionValues)
+            , quizQuestions: this.questionValues([newQuizzes.questions])
+        }))
+        //.reduce((acc, quiz) => acc = quiz, {})
         ;
 
-        console.log(newQuizzes);
-
-        newQuizzes.quizQuestions = newQuizzes.quizQuestions.map(q => q.name);
+        // newQuizzes.quizQuestions = newQuizzes.quizQuestions.map(q => q.name);
 
         /*
         .reduce((quizzes, newQuizzes) => {
@@ -369,20 +367,21 @@ export class AppComponent implements OnInit {
 
         //.join('');
 
-        /*
+        
         this.quizService.saveQuizzes(
             this.getEditedQuizzes()
-            , []
+            , newQuizzes
         )
         .subscribe(
             data => console.log(data),
             err => console.error(err)
         );
-        */
+        
+        
     
-        /*
-            {
-                "changedQuizzes": any[] // Not very realistic, but we'll discuss . . .
+        
+        const example: object =  {
+                "changedQuizzes": this.getEditedQuizzes()
             ​
                 // newQuizzes shape are the interesting bits for the slack-n-tell ! ! !
                 , "newQuizzes": [
@@ -402,8 +401,8 @@ export class AppComponent implements OnInit {
                     }
                 ]
             }
-        */
-
+        
+            console.log(example);
 
 
 
