@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +43,28 @@ export class QuizService {
             } catch (error) {
                 reject('New Error' + error);
             }
+        });
+    }
+
+
+    saveQuizzes(changedQuizzes: any[], newQuizzes: any[] = []) {
+
+        const h = new HttpHeaders({
+            'Content-Type': 'application/json'
+            , 'X-Sas-Token': 'sig=K2WE6NQPtyoV6ke5hwPEaEaW52fgvyFWUeCEdPJls1s'
+        });
+    
+        //console.log(h);
+    
+        return this.httpClient.post(
+            'https://modern-js.azurewebsites.net/save-quizzes-proxy'
+            , JSON.stringify({
+                "changedQuizzes": changedQuizzes
+                , "newQuizzes": newQuizzes
+            }
+        )
+        , {
+            headers: h
         });
     }
 

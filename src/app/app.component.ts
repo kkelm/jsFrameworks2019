@@ -7,6 +7,7 @@ import { promise } from 'protractor';
 import { exists } from 'fs';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { observable } from 'rxjs';
+import { stringify } from 'querystring';
 
 interface QuizDisplay {
     name: string;
@@ -164,12 +165,9 @@ export class AppComponent implements OnInit {
                         //this.progressBar.height = '0';
                         this.displayForm = true;
                         clearInterval(timer);
-
-
-                        console.log(quizzes);
                         this.quizzes = quizzes;
                     }
-                }, 500);
+                }, 100);
             })
             .then(quizzesMap => {
                 // this.loadingProgress = 66;
@@ -185,10 +183,10 @@ export class AppComponent implements OnInit {
     }
 
     get numberOfEditedQuizzes() {
-        return this.getEditedQuiz().length;
+        return this.getEditedQuizzes().length;
     }
 
-    getEditedQuiz() {
+    getEditedQuizzes() {
         return this.quizzes.filter( 
             q => this.generateNaiveQuizCheckSum(q) != q.naiveQuizCheckSum 
             && !q.newlyAddedQuiz && !q.markedForDelete
@@ -322,6 +320,95 @@ export class AppComponent implements OnInit {
 
     }
 
+    saveBatchEdits() {
+
+        const newQuizzes = {
+            quizName: '',
+            quizQuestions: []
+        };
+
+        const newQuestions = {};
+
+        console.log(this.quizzes);
+
+        let questionArray = [];
+        //console.log(this.getEditedQuizzes());
+
+        
+        
+
+        this.quizzes
+        .filter(quiz => quiz.newlyAddedQuiz)
+        .map(newQuizz => {
+            newQuizzes.quizName = newQuizz.name;
+            newQuizzes.quizQuestions = newQuizz.questions[0].name;
+        })
+        //.reduce((acc, quiz) => acc = quiz, null)
+        ;
+
+        console.log(newQuizzes);
+
+        newQuizzes.quizQuestions = newQuizzes.quizQuestions.map(q => q.name);
+
+        /*
+        .reduce((quizzes, newQuizzes) => {
+
+            //console.log([newQuizzes.questions[index]]);
+
+            quizzes = { quizName: newQuizzes.name
+                , quizQuestions: [newQuizzes.questions].map((q, index) => q[index].name) };
+
+
+            return quizzes;
+        }, {});
+        */
+/*
+        
+*/
+        console.log(newQuizzes);
+
+        //.join('');
+
+        /*
+        this.quizService.saveQuizzes(
+            this.getEditedQuizzes()
+            , []
+        )
+        .subscribe(
+            data => console.log(data),
+            err => console.error(err)
+        );
+        */
+    
+        /*
+            {
+                "changedQuizzes": any[] // Not very realistic, but we'll discuss . . .
+            ​
+                // newQuizzes shape are the interesting bits for the slack-n-tell ! ! !
+                , "newQuizzes": [
+                    { 
+                        "quizName": "Foo"
+                        , "quizQuestions": [
+                            "qOne"
+                            , "qTwo"
+                        ]
+                    }
+                    , {
+                        "quizName": "Bar"
+                        , "quizQuestions": [
+                            "cat"
+                            , "dog"
+                        ]
+                    }
+                ]
+            }
+        */
+
+
+
+
+    }
+
     jsPromiseOne() {
         const x = this.quizService.getMagicNumberPromise(true);
         console.log(x);
@@ -354,7 +441,7 @@ export class AppComponent implements OnInit {
 
             const b = this.quizService.getMagicNumberPromise(true);
             console.log(b);
-
+            
             // const results = await Promise.all([a, b]);
             const results = await Promise.race([a, b]);
             console.log(results);
