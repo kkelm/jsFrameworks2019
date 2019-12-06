@@ -22,24 +22,28 @@ interface QuizDisplay {
     selector: 'app-root',
     templateUrl: './app.component.html',
     styles: ['./app.component.css'],
-    /*
     animations: [
-        trigger(
-            'showMessage',
-            [
-                state('open', style({backgroundColor: 'grey', opacity: 1})),
-                state('closed', style({opacity: 0})),
+        trigger('detailsFromLeft', [
+            transition('leftPosition => finalPosition', [
+                animate('300ms', keyframes([
+                    style({ left: '-30px', offset: 0.0 }),
+                    style({ left: '-20px', offset: 0.25 }),
+                    style({ left: '-10px', offset: 0.5 }),
+                    style({ left: '-5px', offset: 0.75 }),
+                    style({ left: '0px', offset: 1.0 })
+                ]))
+            ]),
+        ]),
+        trigger('pulseSaveCancelButtons', [
+            transition('nothingToSave => somethingToSave', [
+                animate('400ms', keyframes([
+                    style({ transform: 'scale(1.0)', 'transform-origin': 'top left', offset: 0.0 }),
+                    style({ transform: 'scale(1.2)', 'transform-origin': 'top left', offset: 0.5 }),
+                    style({ transform: 'scale(1.0)', 'transform-origin': 'top left', offset: 1.0 })
+                ]))
+            ])
+        ]),
 
-                transition('open => closed', [animate('1s')]),
-                transition('closed => open', [animate('2s')])
-            ]
-        )
-    ]
-    */
-
-
-
-    animations: [
         trigger('showMessage', [
             state('open', style({ opacity: 1 }))
             , state('closed', style({ opacity: 0 }))
@@ -218,6 +222,7 @@ export class AppComponent implements OnInit {
     selectQuiz(quiz) {
         this.selectedQuiz = quiz;
         this.quizName = this.selectedQuiz.name;
+        this.detailsAnimationState = "finalPosition";
     }
 
     addQuiz() {
@@ -406,6 +411,11 @@ export class AppComponent implements OnInit {
 
 
 
+    }
+
+    detailsAnimationState: string = "leftPosition";
+    detailsAnimationComplete() {
+        this.detailsAnimationState = "leftPosition";
     }
 
     jsPromiseOne() {

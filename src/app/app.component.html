@@ -63,8 +63,16 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-8" *ngIf="selectedQuiz != undefined">
+        <!--
+            [] = from the View Model to the DOM
+            () = event from the DOM to the View Model
+        -->
+        <div 
+            class="col-md-8" 
+            [@detailsFromLeft]="detailsAnimationState" 
+            (@detailsFromLeft.done)="detailsAnimationComplete()" 
+            *ngIf="selectedQuiz != undefined"
+        >
             <button class="btn mb-3"
                 [class.btn-outline-dark]="(numberOfDeletedQuizzes + numberOfAddedQuizzes + numberOfEditedQuizzes) === 0"
                 [class.btn-dark]="(numberOfDeletedQuizzes + numberOfAddedQuizzes + numberOfEditedQuizzes) > 0"
